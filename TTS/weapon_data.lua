@@ -516,13 +516,24 @@ weapon_data ={
     eruptorLMG = {
         Name = "Eruptor LMG",
         shortRange = {range = 12, mWModifier = 1, Damage = 13},
+        longRange = {range = 36, mWModifier = -1, Damage = 12},
+        specialAbilities = {
+            Burst = 2,
+            Recoil = 3,
+        },
+        damageMultiplier = 1,
+        critFail = 19
+    },
+    mG40LMG = {
+        Name = "MG40 LMG",
+        shortRange = {range = 12, mWModifier = 1, Damage = 13},
         longRange = {range = 36, mWModifier = 0, Damage = 12},
         specialAbilities = {
             Burst = 2,
             Recoil = 3,
         },
         damageMultiplier = 1,
-        critFail = 18
+        critFail = 18 
     },
     destroyerLMG = {
         Name = "Destroyer LMG",
@@ -648,6 +659,4 @@ weapon_data ={
             Terrifying = 1
         }
     },
-
 }
-return weapon_data
