@@ -1,6 +1,5 @@
-
-weapon_data = require("weapon_data")
-local furyEliteGuardTrooper = {
+weapon_data = getObjectFromGUID("467905")
+ furyEliteGuardTrooper = {
     Name = "Fury Elite Guard",
     MV = 4,
     MW = 13,
@@ -15,8 +14,8 @@ local furyEliteGuardTrooper = {
     DP = 6,
     SP = 3,
     Equipment = {
-        delivererBattleblade = weapon_data.delivererBattleblade,
-        punisherHandgun = weapon_data.punisherHandgun
+        delivererBattleblade = weapon_data.getTable("delivererBattleblade"),
+        punisherHandgun = weapon_data.getTable("punisherHandgun")
     },
     specialAbilities = {FierceCharge = 2, Faith = 1,},
     Designation = "Trooper"

@@ -1,6 +1,5 @@
-
-weapon_data = require("weapon_data")
-local sacredWarriorTrooper = {
+weapon_data = getObjectFromGUID("467905")
+sacredWarriorTrooper = {
     Name = "Sacred Warrior",
     MV = 4,
     MW = 12,
@@ -15,8 +14,17 @@ local sacredWarriorTrooper = {
     DP = 4,
     SP = 0,
     Equipment = {
-        r75RetributorCarbine = weapon_data.r75RetributorCarbine,
-        avengerSword = weapon_data.avengerSword
+        r75RetributorCarbine ={
+            Name = "R-75 Retributor Carbine",
+            shortRange = {range = 8, mWModifier = 2, Damage = 12},
+            longRange = {range = 24, mWModifier = 1, Damage = 12},
+            specialAbilities = {
+                
+            },
+            damageMultiplier = 1,
+            critFail = 20
+        },
+        avengerSword = weapon_data.getTable("avengerSword")
     },
     specialAbilities = {Fearless = 1, Duelist = -2, Faith = 2,},
     Designation = "Trooper"

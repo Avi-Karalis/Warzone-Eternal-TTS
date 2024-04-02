@@ -8,12 +8,11 @@ local damageMultiplier =1
 local damage=weapon.damageMultiplier
 distance = tonumber(distance)
 
-
 local longRangeDistance = 0
 
 if type(weapon.longRange.range) == "number" then
     longRangeDistance = weapon.longRange.range 
-elseif type(weapon.longRange.range) == "function" then
+elseif weapon.longRange.range == "dynamic" then
     longRangeDistance = obj1.ST + 4
 end
 
@@ -30,6 +29,7 @@ if weapon.damageMultiplier then
     damageMultiplier = weapon.damageMultiplier
 end
 local burst = tonumber(weapon.specialAbilities.Burst) or 1
+print(burst)
 -- if weapon.specialAbilities.Burst then
 --     burst = weapon.specialAbilities.Burst
 -- end
@@ -121,9 +121,11 @@ function calculate(color)
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
     print("Distance: "..distance)
-    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation)
+    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
     for equipmentName, weapon in pairs(customObject1.Equipment) do
-        if weapon.shortRange != nil or weapon.longRange!=nil then
+        print("test")
+        if weapon.shortRange ~= nil or weapon.longRange ~=nil then
+            
             local result = calculateShootActionMW2(customObject1, weapon, distance, customObject2)
             print(result)
         end

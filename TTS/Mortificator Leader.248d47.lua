@@ -1,9 +1,4 @@
-
-weapon_data = require("weapon_data")
-
--- Now you can access the contents of weaponData as needed
-    -- Access weapon data
-
+weapon_data = getObjectFromGUID("467905")
 mortificatorLeader = {
     Name = "Mortificator",
     MV = 6,
@@ -14,16 +9,16 @@ mortificatorLeader = {
     AR = 20,
     W = 2,
     PW = 13,
-    LD = 15,
+    LD = 16,
     Base = 30,
     DP = 7,
     SP = 2,
     Equipment = {
-        mortisBlade = weapon_data.mortisBlade,
-        avalancheHandgun = weapon_data.avalancheHandgun,
-        smokeGrenades = weapon_data.smokeGrenades
+        mortisBlade = weapon_data.getTable("mortisBlade"),
+        avalancheHandgun = weapon_data.getTable("avalancheHandgun"),
+        smokeGrenades = weapon_data.getTable("smokeGrenades")
     },
-    specialAbilities = {Camouflage = 2, Command = "Mortificators", Dodge=1, Executioner = 2,Faith=1,FirstStrike=1, Gymnastic=1,Inspire=1,Shadowed=1},
+    specialAbilities = {Camouflage = 2, Dodge=1, Executioner = 2,Faith=1,FirstStrike=1, Gymnastic=1,Shadowed=1, Inspire = 1, Command = "Mortificator"},
     Designation = "Leader"
 }
 self.setVar("CustomData", mortificatorLeader)
