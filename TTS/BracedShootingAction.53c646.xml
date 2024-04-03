@@ -1,0 +1,10 @@
+<Button
+    onClick="onClickCalculate"
+    position="0 0 -40"
+    width="600"
+    height="200"
+    fontSize="35"
+>
+   Default Shoot Action
+   Press Numpad 2
+</Button>

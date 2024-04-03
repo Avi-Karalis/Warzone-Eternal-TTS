@@ -1,4 +1,6 @@
-
+function onLoad()
+    self.scale(0,0,0)
+end
     mP105Handgun = {
         Name = "MP-105 Handgun",
         cCModifier = 0,

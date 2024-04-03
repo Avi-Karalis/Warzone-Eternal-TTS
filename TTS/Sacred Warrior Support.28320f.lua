@@ -18,10 +18,7 @@ sacredWarriorSupport = {
             Name = "Eruptor LMG",
             shortRange = {range = 12, mWModifier = 1, Damage = 13},
             longRange = {range = 36, mWModifier = 0, Damage = 12},
-            specialAbilities = {
-                Burst = 2,
-                Recoil = 3,
-            },
+            specialAbilities = {Burst = 2,Recoil = 3,},
             damageMultiplier = 1,
             critFail = 18
         },

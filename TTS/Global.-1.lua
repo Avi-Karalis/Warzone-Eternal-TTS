@@ -35,6 +35,8 @@ function onLoad()
 
 end
 
+Skata = 3
+
 function hello()
     print("Hello, World!")
 end
