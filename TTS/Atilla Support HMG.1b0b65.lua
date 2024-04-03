@@ -1,0 +1,1 @@
+weapon_data = getObjectFromGUID("467905")
