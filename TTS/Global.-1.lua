@@ -51,8 +51,34 @@ function calculateLongRangeDistance(obj1, weapon)
     end
 end    
 
+function calculateStrikeRangeDistance(obj1, weapon)
+    if type(weapon.specialAbilities.Reach) == "number" then
+        return weapon.specialAbilities.Reach
+    elseif weapon.specialAbilities.Reach == "dynamic" then
+        return obj1.ST + 4
+    else
+        return 0
+    end
+end   
+
+local function calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance)
+    local cCModifier, damage = 0, 0
+    if distance <= (weapon.specialAbilities.Reach or 0.1)then
+        cCModifier = weapon.shortRange.mWModifier
+        damage = weapon.cCDamage
+        if weapon.dynamicCC == true then
+            damage = damage + obj1.ST
+        else
+            damage = damage
+        end
+    elseif distance > strikeRangeDistance then
+        return "out of range", 0
+    end
+    return damage, cCModifier
+end
+
 local function calculateDamageAndModifier(distance, weapon, longRangeDistance)
-    local mWModifier, damage = 0, weapon.damageMultiplier
+    local mWModifier, damage = 0, 0
     if distance <= weapon.shortRange.range then
         mWModifier = weapon.shortRange.mWModifier
         damage = weapon.shortRange.Damage
@@ -62,10 +88,37 @@ local function calculateDamageAndModifier(distance, weapon, longRangeDistance)
         mWModifier = weapon.longRange.mWModifier
         damage = weapon.longRange.Damage
     end
+    return damage, mWModifier
+end
+
+local function calculateDefaultStrike(obj1, weapon, distance, obj2)
+    local targetDef = obj2.DEF
+    local cC = obj1.CC
+    local cCModifier = 0
+    local damageMultiplier = 1
+    local damage=0
+    distance = tonumber(distance)
+    
+    local strikeRangeDistance = calculateStrikeRangeDistance(obj1, weapon)
+    
+    local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance)
+
     if weapon.damageMultiplier then
         damageMultiplier = weapon.damageMultiplier
     end
-    return damage, mWModifier
+    local burst = tonumber(weapon.specialAbilities.MultiStrike) or 1
+
+    local duelistModifier = obj2.specialAbilities.Duelist or 0
+    local totalMWTN = cC + cCModifier + targetDef + duelistModifier
+
+    local totalCCTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0)
+    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    " CC TN with no Brace: " ..( totalCCNRecoil or "unknown").. "\n" ..
+    " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
+    " Damage: " .. (damage or "unknown") .. "\n" ..
+    " Number of Strikes: ".. burst .."\n" ..
+    " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
+    "--------------------------------------------------------------------------")
 end
 
 local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
@@ -73,7 +126,7 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     local mW = obj1.MW
     local mWModifier = 0
     local damageMultiplier =1
-    local damage=weapon.damageMultiplier
+    local damage= 0
     distance = tonumber(distance)
     
     local longRangeDistance = calculateLongRangeDistance(obj1, weapon)
@@ -107,7 +160,7 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     local mW = obj1.MW
     local mWModifier = 0
     local damageMultiplier =1
-    local damage=weapon.damageMultiplier
+    local damage=0
     distance = tonumber(distance)
     
     local longRangeDistance = calculateLongRangeDistance(obj1, weapon)
@@ -141,7 +194,7 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     local mW = obj1.MW
     local mWModifier = 0
     local damageMultiplier =1
-    local damage=weapon.damageMultiplier
+    local damage=0
     distance = tonumber(distance)
     
     local longRangeDistance = calculateLongRangeDistance(obj1, weapon)
@@ -269,6 +322,33 @@ function calculate(params)
 
             elseif params.index == 3 then
                 calculateAimShootAction(customObject1, weapon, distance, customObject2)
+            end
+
+        end
+    end
+end
+
+
+function calculateMelee(params)
+    local player = getPlayer(params.color)
+    local steamName = player.steam_name
+    local objects = player.getSelectedObjects()
+    if #objects < 1 or  #objects > 2 then
+        return print("Select 2 objects")
+    end
+    local customObject1 = objects[1].getVar("CustomData")
+    local customObject2 = objects[2].getVar("CustomData")
+    local distance = calculateDistance(objects)
+    print("Distance: "..distance)
+    print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+    for equipmentName, weapon in pairs(customObject1.Equipment) do
+        if weapon.shortRange != nil or weapon.longRange !=nil then
+
+            if params.index == 4 then
+                calculateDefaultShootAction(customObject1, weapon, distance, customObject2)
+
+            elseif params.index == 5 then
+                calculateBraceShootAction(customObject1, weapon, distance, customObject2)
             end
 
         end
