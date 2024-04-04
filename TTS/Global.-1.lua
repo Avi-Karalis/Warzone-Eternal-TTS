@@ -88,7 +88,7 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0) - (obj2.specialAbilities.Evasive or 0)
+    local totalMWTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0)
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
@@ -122,7 +122,7 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN + 4 - (obj2.specialAbilities.Evasive or 0)
+    local totalMWTNRecoil = totalMWTN 
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
@@ -157,7 +157,7 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN + 4 - (obj2.specialAbilities.Evasive or 0)
+    local totalMWTNRecoil = totalMWTN
     damage = damage + 2
     if weapon.specialAbilities.Burst then
         print("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
@@ -257,7 +257,7 @@ function calculate(params)
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
     print("Distance: "..distance)
-    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
     for equipmentName, weapon in pairs(customObject1.Equipment) do
         if weapon.shortRange != nil or weapon.longRange !=nil then
 
