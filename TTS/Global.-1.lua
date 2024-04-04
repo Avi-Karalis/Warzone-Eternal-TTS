@@ -148,7 +148,7 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
 
     local totalCCTN = totalCCTN  + 2
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
-    " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
+    " Charge CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Strikes: ".. burst .."\n" ..
@@ -376,16 +376,36 @@ function calculateMelee(params)
     local distance = calculateDistance(objects)
     print("Distance: "..distance)
     print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
-    for equipmentName, weapon in pairs(customObject1.Equipment) do
-        if weapon.shortRange != nil or weapon.longRange !=nil then
-
-            if params.index == 4 then
-                calculateDefaultShootAction(customObject1, weapon, distance, customObject2)
-
-            elseif params.index == 5 then
-                calculateBraceShootAction(customObject1, weapon, distance, customObject2)
-            end
-
-        end
-    end
+    function calculateMelee()
+        params = {index = 4}
+          local customObject1 = chasseurTrooper
+          local customObject2 = etoilesMortantSupport
+          local distance = 0
+          print("Distance: "..distance)
+          print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+         local meleeWeaponFound = false  -- Flag to track if a melee weapon is found
+          
+          for equipmentName, weapon in pairs(customObject1.Equipment) do
+              if weapon.cCDamage ~= nil then
+                  -- Found a melee weapon, perform calculation
+                  if params.index == 4 then
+                      calculateDefaultStrike(customObject1, weapon, distance, customObject2)
+                  elseif params.index == 5 then
+                      calculateChargeStrike(customObject1, weapon, distance, customObject2)
+                  end
+                  meleeWeaponFound = true
+                  break  -- Exit the loop after handling the melee weapon
+              end
+          end
+          
+          if not meleeWeaponFound then
+              -- No melee weapon found, use default melee weapon for calculation
+              local defaultWeapon = {Name = "Fists, Riflebutt", cCModifier = 0, cCDamage = 0, specialAbilities = {}, damageMultiplier = 1, critFail = 20, dynamicCC = true}
+              if params.index == 4 then
+                  calculateDefaultStrike(customObject1, defaultWeapon, distance, customObject2)
+              elseif params.index == 5 then
+                  calculateBraceShootAction(customObject1, defaultWeapon, distance, customObject2)
+              end
+          end
+      end
 end
