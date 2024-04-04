@@ -61,15 +61,15 @@ function calculateStrikeRangeDistance(obj1, weapon)
     end
 end   
 
-local function calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance)
+local function calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance, ST)
     local cCModifier, damage = 0, 0
     if distance <= (weapon.specialAbilities.Reach or 0.1)then
-        cCModifier = weapon.shortRange.mWModifier
+        cCModifier = weapon.cCModifier
         damage = weapon.cCDamage
         if weapon.dynamicCC == true then
-            damage = damage + obj1.ST
+            damage = weapon.cCDamage + obj1.ST
         else
-            damage = damage
+            damage = weapon.cCDamage
         end
     elseif distance > strikeRangeDistance then
         return "out of range", 0
@@ -101,7 +101,7 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
     
     local strikeRangeDistance = calculateStrikeRangeDistance(obj1, weapon)
     
-    local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance)
+    local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance, obj1.ST)
 
     if weapon.damageMultiplier then
         damageMultiplier = weapon.damageMultiplier
@@ -109,11 +109,46 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
     local burst = tonumber(weapon.specialAbilities.MultiStrike) or 1
 
     local duelistModifier = obj2.specialAbilities.Duelist or 0
-    local totalMWTN = cC + cCModifier + targetDef + duelistModifier
+    local totalCCTN = cC + cCModifier + targetDef + duelistModifier
 
-    local totalCCTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
-    " CC TN with no Brace: " ..( totalCCNRecoil or "unknown").. "\n" ..
+    " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
+    " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
+    " Damage: " .. (damage or "unknown") .. "\n" ..
+    " Number of Strikes: ".. burst .."\n" ..
+    " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
+    "--------------------------------------------------------------------------")
+end
+
+local function calculateChargeStrike(obj1, weapon, distance, obj2)
+    local targetDef = obj2.DEF
+    local cC = obj1.CC
+    local cCModifier = 0
+    local damageMultiplier = 1
+    local damage=0
+    distance = tonumber(distance)
+    
+    local strikeRangeDistance = calculateStrikeRangeDistance(obj1, weapon)
+    
+    local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance, obj1.ST)
+
+    if weapon.damageMultiplier then
+        damageMultiplier = weapon.damageMultiplier
+    end
+    local burst = tonumber(weapon.specialAbilities.MultiStrike) or 1
+    local fierceChargeModifier = 0
+    if obj1.specialAbilities.FierceCharge then
+        fierceChargeModifier = 2
+    else
+        fierceChargeModifier = 0
+    end
+    local duelistModifier = obj2.specialAbilities.Duelist or 0
+    local totalCCTN = cC + cCModifier + targetDef + duelistModifier
+    damage = damage + fierceChargeModifier
+
+    local totalCCTN = totalCCTN  + 2
+    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Strikes: ".. burst .."\n" ..
