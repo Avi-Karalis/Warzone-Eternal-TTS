@@ -17,7 +17,7 @@ venusianRangerSupport = {
         mG80HMG = weapon_data.getTable("mG80HMG"),
         mP105Handgun = weapon_data.getTable("mP105Handgun")
     },
-    specialAbilities = {Camouflage = 1, Determination = 1}
+    specialAbilities = {Camouflage = 1, Determination = 1},
     Designation = "Support"
 }
 self.setVar("CustomData", venusianRangerSupport)

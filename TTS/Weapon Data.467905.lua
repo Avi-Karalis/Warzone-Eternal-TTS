@@ -694,9 +694,11 @@ end
     }
     theDevouringDarkness = {
         Name = "The Devouring Darkness",
+        longRange = {range = 18, mWModifier = -4, Damage = 4},
         shortRange = {range = 18, mWModifier = -4, Damage = 4},
         specialAbilities = {
             Symmetry = 1,
             Terrifying = 1
-        }
+        },
+        critFail = 20
     }

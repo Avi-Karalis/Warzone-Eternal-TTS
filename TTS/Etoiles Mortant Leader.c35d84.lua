@@ -14,7 +14,7 @@ etoilesMortantLeader = {
     DP = 4,
     SP = 2,
     Equipment = {
-        pSG99SniperRifle = weapon_data.getTable("pSG99SniperRifle"),
+        punisherHandgun = weapon_data.getTable("punisherHandgun"),
         punisherShortSword = weapon_data.getTable("punisherShortSword")
     },
     specialAbilities = {Awareness = 1, Dodge = 1, Evasive = -2, Command = "Etoiles Mortant", Inspire = 1},

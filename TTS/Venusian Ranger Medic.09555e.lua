@@ -17,7 +17,7 @@ venusianRangerSpecialist = {
         aG17AssaultRifle = weapon_data.getTable("aG17AssaultRifle"),
         mP105Handgun = weapon_data.getTable("mP105Handgun")
     },
-    specialAbilities = {Camouflage = 1, Determination = 1, FirstAid = 12}
+    specialAbilities = {Camouflage = 1, Determination = 1, FirstAid = 12},
     Designation = "Specialist"
 }
 self.setVar("CustomData", venusianRangerSpecialist)

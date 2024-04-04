@@ -28,18 +28,9 @@ end
 function findObjectByGUID(guid)
     return getObjectFromGUID(guid)
 end
--- -- melee
-function onLoad()
-    
 
 
-end
 
-Skata = 3
-
-function hello()
-    print("Hello, World!")
-end
 
 function calculateLongRangeDistance(obj1, weapon)
     if type(weapon.longRange.range) == "number" then
@@ -67,7 +58,7 @@ local function calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDis
         cCModifier = weapon.cCModifier
         damage = weapon.cCDamage
         if weapon.dynamicCC == true then
-            damage = weapon.cCDamage + obj1.ST
+            damage = weapon.cCDamage + ST
         else
             damage = weapon.cCDamage
         end
@@ -144,8 +135,9 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
     end
     local duelistModifier = obj2.specialAbilities.Duelist or 0
     local totalCCTN = cC + cCModifier + targetDef + duelistModifier
-    damage = damage + fierceChargeModifier
-
+    if damage ~= "out of range" then
+        damage = damage + (fierceChargeModifier or 0)
+    end
     local totalCCTN = totalCCTN  + 2
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " Charge CC TN : " ..( totalCCTN or "unknown").. "\n" ..
@@ -245,7 +237,10 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN
+    local totalMWTNRecoil = totalMWTN +4
+    if damage == nil then
+        damage = 0
+    end
     damage = damage + 2
     if weapon.specialAbilities.Burst then
         print("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
@@ -273,15 +268,15 @@ function roundToOneDecimal(num)
 end
 
 function millimetersToInches(mm)
-    local inchesPerMillimeter = 0.0393701  -- 1 millimeter = 0.0393701 inches
+    local inchesPerMillimeter = 0.0393701
     return mm * inchesPerMillimeter
 end
 function extractObjProps(objects)
     local obj1 = objects[1]
     local obj2 = objects[2]
-    local obj1_mm = obj1.getVar("CustomData").Base
-    local obj2_mm = obj2.getVar("CustomData").Base
-    return obj1, obj2, obj1_mm, obj2_mm
+    local obj1BaseMillimeter = obj1.getVar("CustomData").Base
+    local obj2BaseMillimeter = obj2.getVar("CustomData").Base
+    return obj1, obj2, obj1BaseMillimeter, obj2BaseMillimeter
 end
 
 function calculateHeightDiff(pos1, pos2, obj1BaseInches, obj2BaseInches, dy)
@@ -310,8 +305,8 @@ end
 function calculateDistance(objects)
     local obj1, obj2, obj1BaseMillimeter, obj2BaseMillimeter = extractObjProps(objects)
     
-    obj1BaseInches = millimetersToInches(obj1BaseMillimeter)
-    obj2BaseInches = millimetersToInches(obj2BaseMillimeter)
+    local obj1BaseInches = millimetersToInches(obj1BaseMillimeter)
+    local obj2BaseInches = millimetersToInches(obj2BaseMillimeter)
     local baseDiameters = baseDifference(obj1BaseInches, obj2BaseInches)
 
     --print("base Diameters"..baseDiameters)
@@ -338,14 +333,14 @@ function calculate(params)
     local player = getPlayer(params.color)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
-    if #objects < 1 or  #objects > 2 then
+    if #objects ~= 2 then
         return print("Select 2 objects")
     end
     local customObject1 = objects[1].getVar("CustomData")
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
     print("Distance: "..distance)
-    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
     for equipmentName, weapon in pairs(customObject1.Equipment) do
         if weapon.shortRange != nil or weapon.longRange !=nil then
 
@@ -364,48 +359,41 @@ function calculate(params)
 end
 
 
+
 function calculateMelee(params)
     local player = getPlayer(params.color)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
-    if #objects < 1 or  #objects > 2 then
+    if #objects ~= 2 then
         return print("Select 2 objects")
     end
     local customObject1 = objects[1].getVar("CustomData")
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
     print("Distance: "..distance)
-    print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
-    function calculateMelee()
-        params = {index = 4}
-          local customObject1 = chasseurTrooper
-          local customObject2 = etoilesMortantSupport
-          local distance = 0
-          print("Distance: "..distance)
-          print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. "| Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
-         local meleeWeaponFound = false  -- Flag to track if a melee weapon is found
-          
-          for equipmentName, weapon in pairs(customObject1.Equipment) do
-              if weapon.cCDamage ~= nil then
-                  -- Found a melee weapon, perform calculation
-                  if params.index == 4 then
-                      calculateDefaultStrike(customObject1, weapon, distance, customObject2)
-                  elseif params.index == 5 then
-                      calculateChargeStrike(customObject1, weapon, distance, customObject2)
-                  end
-                  meleeWeaponFound = true
-                  break  -- Exit the loop after handling the melee weapon
-              end
-          end
-          
-          if not meleeWeaponFound then
-              -- No melee weapon found, use default melee weapon for calculation
-              local defaultWeapon = {Name = "Fists, Riflebutt", cCModifier = 0, cCDamage = 0, specialAbilities = {}, damageMultiplier = 1, critFail = 20, dynamicCC = true}
+      print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+     local meleeWeaponFound = false  -- Flag to track if a melee weapon is found
+      
+      for equipmentName, weapon in pairs(customObject1.Equipment) do
+          if weapon.cCDamage ~= nil then
+              -- Found a melee weapon, perform calculation
               if params.index == 4 then
-                  calculateDefaultStrike(customObject1, defaultWeapon, distance, customObject2)
+                  calculateDefaultStrike(customObject1, weapon, distance, customObject2)
               elseif params.index == 5 then
-                  calculateBraceShootAction(customObject1, defaultWeapon, distance, customObject2)
+                  calculateChargeStrike(customObject1, weapon, distance, customObject2)
               end
+              meleeWeaponFound = true
+              break  -- Exit the loop after handling the melee weapon
           end
       end
-end
+      
+      if not meleeWeaponFound then
+          -- No melee weapon found, use default melee weapon for calculation
+          local defaultWeapon = {Name = "Fists, Riflebutt", cCModifier = 0, cCDamage = 0, specialAbilities = {}, damageMultiplier = 1, critFail = 20, dynamicCC = true}
+          if params.index == 4 then
+              calculateDefaultStrike(customObject1, defaultWeapon, distance, customObject2)
+          elseif params.index == 5 then
+              calculateBraceShootAction(customObject1, defaultWeapon, distance, customObject2)
+          end
+      end
+  end
