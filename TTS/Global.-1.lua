@@ -88,10 +88,13 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0)
-
+    local totalMWTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0) - (obj2.specialAbilities.Evasive or 0)
+    totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
+    totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with no Brace: " ..( totalMWTNRecoil or "unknown").. "\n" ..
+    " MW TN with no Brace and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
+    " MW TN with no Brace and Heavy Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
@@ -119,10 +122,13 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN
-
+    local totalMWTNRecoil = totalMWTN + 4 - (obj2.specialAbilities.Evasive or 0)
+    totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
+    totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with Brace: " ..( totalMWTNRecoil or "unknown").. "\n" ..
+    " MW TN with Brace and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
+    " MW TN with Brace and Heavy Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
@@ -151,7 +157,7 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
 
-    local totalMWTNRecoil = totalMWTN + 4
+    local totalMWTNRecoil = totalMWTN + 4 - (obj2.specialAbilities.Evasive or 0)
     damage = damage + 2
     if weapon.specialAbilities.Burst then
         print("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
@@ -160,8 +166,12 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
         print("Can't Aim with projected weapon".. "\n" .."--------------------------------------------------------------------------")
         return
     end
+    totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
+    totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print( "Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with Aim: " ..( totalMWTNRecoil or "unknown").. "\n" ..
+    " MW TN with Aim and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
+    " MW TN with and Light Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
