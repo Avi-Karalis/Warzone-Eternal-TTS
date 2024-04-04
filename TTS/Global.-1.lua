@@ -118,7 +118,7 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
     local damageMultiplier = 1
     local damage=0
     distance = tonumber(distance)
-    
+    local thrustModifier = weapon.specialAbilities.Thrust or 0
     local strikeRangeDistance = calculateStrikeRangeDistance(obj1, weapon)
     
     local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance, obj1.ST)
@@ -136,7 +136,7 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
     local duelistModifier = obj2.specialAbilities.Duelist or 0
     local totalCCTN = cC + cCModifier + targetDef + duelistModifier
     if damage ~= "out of range" then
-        damage = damage + (fierceChargeModifier or 0)
+        damage = damage + (fierceChargeModifier or 0) + (thrustModifier or 0)
     end
     local totalCCTN = totalCCTN  + 2
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
