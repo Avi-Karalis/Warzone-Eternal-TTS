@@ -1,6 +1,6 @@
 weapon_data = getObjectFromGUID("467905")
  shadowWalker = {
-    Name = "Fury Elite Guard",
+    Name = "Shadow Walker",
     MV = 5,
     MW = 12,
     CC = 15,
