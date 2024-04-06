@@ -1,12 +1,16 @@
 
 
 function onClickCalculate(params)
-    local playerColor = params.color
-    calculate(playerColor)
-end
+    index = 2
+    if index == 2 then
+        print("Braced Shooting Action: ")
+        params = {
+            color = params.color,
+            index = index
+        }
+        Global.call('calculate',params)
 
-function onScriptingButtonDown(index, color)
-    calculate(color)
+    end
 end
 
 function onScriptingButtonDown(index, color)

@@ -639,7 +639,6 @@ end
             Cloud = 2,
             Smoke = 1,
             Indirect = 1,
-            Burst = 1
         },
         damageMultiplier = 1,
         critFail = 20

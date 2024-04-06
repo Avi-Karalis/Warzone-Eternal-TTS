@@ -1,12 +1,17 @@
 
 
 function onClickCalculate(params)
-    local playerColor = params.color
-    calculate(playerColor)
-end
+    index = 5
+    if index == 5 then
+        print("Charging Strike Action: ")
+        params = {
+            color = params.color,
+            index = index
+        }
 
-function onScriptingButtonDown(index, color)
-    calculate(color)
+        Global.call('calculateMelee',params)
+
+    end
 end
 
 function onScriptingButtonDown(index, color)

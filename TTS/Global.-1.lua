@@ -101,13 +101,15 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
 
     local duelistModifier = obj2.specialAbilities.Duelist or 0
     local totalCCTN = cC + cCModifier + targetDef + duelistModifier
-
+print(damage)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Strikes: ".. burst .."\n" ..
     " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. ((obj2.AR - damage - 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage - 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -145,6 +147,8 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Strikes: ".. burst .."\n" ..
     " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
+    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -179,6 +183,8 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
+    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
     
@@ -213,6 +219,8 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n"..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
+    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -242,7 +250,7 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
         damage = 0
     end
     damage = damage + 2
-    if weapon.specialAbilities.Burst then
+    if weapon.specialAbilities.Burst  then
         print("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
         return
     elseif weapon.specialAbilities.Projected then
@@ -259,6 +267,8 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n"..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
+    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -333,6 +343,7 @@ function calculate(params)
     local player = getPlayer(params.color)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
+    print (steamName)
     if #objects ~= 2 then
         return print("Select 2 objects")
     end
