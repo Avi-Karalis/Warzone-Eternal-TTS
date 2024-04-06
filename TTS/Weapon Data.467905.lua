@@ -258,12 +258,14 @@ end
         cCModifier = -1,
         cCDamage = 12,
         damageMultiplier = 1,
+        specialAbilities = {  
+        },
         shortRange = {range = 6, mWModifier = 0, Damage = 12},
         longRange = {range = 18, mWModifier = -2, Damage = 11},
         critFail = 20,
         dynamicCC = false
     }
-    cAR24SMHG = {
+    cAR24SMG = {
         Name = "CAR-24 SMG",
         damageMultiplier = 1,
         specialAbilities = {
@@ -276,7 +278,7 @@ end
     m516Shotgun = {
         Name = "M516 Shotgun",
         damageMultiplier = 2,
-
+        specialAbilities = {},
         shortRange = {range = 6, mWModifier = 0, Damage = 12},
         longRange = {range = 18, mWModifier = -3, Damage = 11},
         critFail = 20
@@ -284,7 +286,8 @@ end
     m50AssaultRifle = {
         Name = "M50 Assault Rifle",
         damageMultiplier = 1,
-
+        specialAbilities = {  
+        },
         shortRange = {range = 12, mWModifier = 0, Damage = 13},
         longRange = {range = 36, mWModifier = -2, Damage = 13},
         critFail = 20

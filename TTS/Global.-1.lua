@@ -167,6 +167,7 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     if weapon.damageMultiplier then
         damageMultiplier = weapon.damageMultiplier
     end
+    print(weapon.Name)
     local burst = tonumber(weapon.specialAbilities.Burst) or 1
 
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
