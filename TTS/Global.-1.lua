@@ -89,7 +89,7 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
     local damageMultiplier = 1
     local damage=0
     distance = tonumber(distance)
-    
+
     local strikeRangeDistance = calculateStrikeRangeDistance(obj1, weapon)
     
     local damage, cCModifier = calculateStrikeDamageAndModifier(distance, weapon, strikeRangeDistance, obj1.ST)
@@ -101,7 +101,6 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
 
     local duelistModifier = obj2.specialAbilities.Duelist or 0
     local totalCCTN = cC + cCModifier + targetDef + duelistModifier
-print(damage)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
@@ -109,7 +108,7 @@ print(damage)
     " Number of Strikes: ".. burst .."\n" ..
     " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
     "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
-    "Failure to AR Save TN ".. ((obj2.AR - damage - 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage - 6 )or "unknown").. "\n" ..
+    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - ".. ((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -147,8 +146,8 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Strikes: ".. burst .."\n" ..
     " Number of Saves per Strike: ".. (damageMultiplier or "unknown") .. "\n" ..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
-    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - ".. ((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -167,13 +166,15 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     if weapon.damageMultiplier then
         damageMultiplier = weapon.damageMultiplier
     end
-    print(weapon.Name)
     local burst = tonumber(weapon.specialAbilities.Burst) or 1
 
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
-
-    local totalMWTNRecoil = totalMWTN - (weapon.specialAbilities.Recoil or 0)
+    local recoilModifier = obj2.specialAbilities.Recoil or 0
+    if obj1.specialAbilities.FiringStance then
+        recoilModifier = 0
+    end
+    local totalMWTNRecoil = totalMWTN - recoilModifier
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
     print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
@@ -184,8 +185,8 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n" ..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
-    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - ".. ((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
     
@@ -220,8 +221,8 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n"..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
-    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - ".. ((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -268,8 +269,8 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n"..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. (obj2.AR - damage ) .. "\n" ..
-    "Failure to AR Save TN ".. (obj2.AR - damage - 5 or "unknown").. " Critical Failure: " .. (obj2.AR - damage - 6 or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - " ..((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -344,7 +345,6 @@ function calculate(params)
     local player = getPlayer(params.color)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
-    print (steamName)
     if #objects ~= 2 then
         return print("Select 2 objects")
     end
@@ -385,17 +385,18 @@ function calculateMelee(params)
     print("Distance: "..distance)
       print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
      local meleeWeaponFound = false  -- Flag to track if a melee weapon is found
-      
-      for equipmentName, weapon in pairs(customObject1.Equipment) do
+     for equipmentName, weapon in pairs(customObject1.Equipment) do
+
           if weapon.cCDamage ~= nil then
               -- Found a melee weapon, perform calculation
               if params.index == 4 then
+           
                   calculateDefaultStrike(customObject1, weapon, distance, customObject2)
               elseif params.index == 5 then
                   calculateChargeStrike(customObject1, weapon, distance, customObject2)
               end
               meleeWeaponFound = true
-              break  -- Exit the loop after handling the melee weapon
+              
           end
       end
       

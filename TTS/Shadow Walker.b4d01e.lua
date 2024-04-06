@@ -14,7 +14,18 @@ weapon_data = getObjectFromGUID("467905")
     DP = 5,
     SP = 0,
     Equipment = {
-        poisonedPunisherShortsword = weapon_data.getTable("poisonedPunisherShortsword"),
+        poisonedPunisherShortSword = {
+            Name = "Poisoned Punisher Short Sword",
+            cCModifier = 1,
+            cCDamage = 7,
+            specialAbilities = {
+                Vicious = 2,
+                Reach = 1
+            },
+            damageMultiplier = 2,
+            critFail = 20,
+            dynamicCC = true
+        },
         silencedPunisherHandgun = weapon_data.getTable("silencedPunisherHandgun"),
         smokeGrenades = weapon_data.getTable("smokeGrenades")
     },
