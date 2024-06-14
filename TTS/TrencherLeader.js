@@ -20,7 +20,8 @@ let trencherLeader = {
     },
     specialAbilities : {Entrenched : 1, Group : 2 , Rebreather : 0, Recruit : 1, Command : "Trencher", Inspire : 1},
     Designation : "Leader",
+    
     }
-trencherLeader.FullName = trencherLeader.Name + " " + trencherLeader.Designation;
+
 
 export default trencherLeader;
