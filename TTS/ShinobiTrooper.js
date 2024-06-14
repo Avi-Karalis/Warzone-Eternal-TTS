@@ -37,7 +37,7 @@ let shinobiTrooper = {
         let shortRangeDamage = [];
         for (let key in this.Equipment) {
             if (this.Equipment.hasOwnProperty(key) && this.Equipment[key].shortRange) {
-                shortRangeDamage.push(this.Equipment[key].shortRange.Damage);
+                shortRangeDamage.push(`${this.Equipment[key].Name} ranged Damage `+ this.Equipment[key].shortRange.Damage);
             }
         }
         return shortRangeDamage;
@@ -46,7 +46,7 @@ let shinobiTrooper = {
         let longRangeDamage = [];
         for (let key in this.Equipment) {
             if (this.Equipment.hasOwnProperty(key) && this.Equipment[key].longRange) {
-                longRangeDamage.push(this.Equipment[key].longRange.Damage);
+                longRangeDamage.push(`${this.Equipment[key].Name} ranged Damage `+ this.Equipment[key].longRange.Damage);
             }
         }
         return longRangeDamage;
