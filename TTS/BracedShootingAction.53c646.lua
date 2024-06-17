@@ -3,7 +3,7 @@
 function onClickCalculate(params)
     index = 2
     if index == 2 then
-        print("Braced Shooting Action: ")
+        broadcastToAll("Braced Shooting Action: ")
         params = {
             color = params.color,
             index = index
@@ -15,7 +15,7 @@ end
 
 function onScriptingButtonDown(index, color)
     if index == 2 then
-        print("Braced Shooting Action: ")
+        broadcastToAll("Braced Shooting Action: ")
         params = {
             color = color,
             index = index

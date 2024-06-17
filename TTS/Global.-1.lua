@@ -7,7 +7,7 @@ function onObjectPickUp(color, object)
         local foundObject = getObjectFromGUID(objectGuid)
         local customData = foundObject.getVar("CustomData")
         if customData then
-            print(steamName .. " picked up " .. customData.Name .. " - " .. customData.Designation)
+            broadcastToAll(steamName .. " picked up " .. customData.Name .. " - " .. customData.Designation)
         end
     end
 end
@@ -20,7 +20,7 @@ function onObjectDrop(color, object)
         local foundObject = findObjectByGUID(objectGuid)
         local customData = foundObject.getVar("CustomData")
         if customData then
-            print(steam_name.. " dropped " .. customData.Name .. " - " .. customData.Designation)
+            broadcastToAll(steam_name.. " dropped " .. customData.Name .. " - " .. customData.Designation)
         end
     end
 end
@@ -101,7 +101,7 @@ local function calculateDefaultStrike(obj1, weapon, distance, obj2)
 
     local duelistModifier = obj2.specialAbilities.Duelist or 0
     local totalCCTN = cC + cCModifier + targetDef + duelistModifier
-    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    broadcastToAll("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
@@ -140,7 +140,7 @@ local function calculateChargeStrike(obj1, weapon, distance, obj2)
         damage = damage + (fierceChargeModifier or 0) + (thrustModifier or 0)
     end
     local totalCCTN = totalCCTN  + 2
-    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    broadcastToAll("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " Charge CC TN : " ..( totalCCTN or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
     " Damage: " .. (damage or "unknown") .. "\n" ..
@@ -170,14 +170,20 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
 
     local evasiveModifier = obj2.specialAbilities.Evasive or 0
     local totalMWTN = mW + mWModifier + targetDef + evasiveModifier
-    local recoilModifier = obj2.specialAbilities.Recoil or 0
+    local recoilModifier = weapon.specialAbilities.Recoil or 0
     if obj1.specialAbilities.FiringStance then
         recoilModifier = 0
+    end
+    local totalDamage
+    if damage ~= "out of range" then
+        totalDamage = obj2.AR - damage
+    else 
+        totalDamage = 0
     end
     local totalMWTNRecoil = totalMWTN - recoilModifier
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
-    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    broadcastToAll("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with no Brace: " ..( totalMWTNRecoil or "unknown").. "\n" ..
     " MW TN with no Brace and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
     " MW TN with no Brace and Heavy Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
@@ -185,8 +191,8 @@ local function calculateDefaultShootAction(obj1, weapon, distance, obj2)
     " Damage: " .. (damage or "unknown") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n" ..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
-    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - ".. ((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((totalDamage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((totalDamage + 1) or "unknown")).." - ".. ((totalDamage + 5) or "unknown").. " Critical Failure: " .. ((totalDamage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
     
@@ -213,7 +219,7 @@ local function calculateBraceShootAction(obj1, weapon, distance, obj2)
     local totalMWTNRecoil = totalMWTN 
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
-    print("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    broadcastToAll("Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with Brace: " ..( totalMWTNRecoil or "unknown").. "\n" ..
     " MW TN with Brace and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
     " MW TN with Brace and Heavy Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
@@ -251,26 +257,32 @@ local function calculateAimShootAction(obj1, weapon, distance, obj2)
     if damage == nil then
         damage = 0
     end
-    damage = damage + 2
+    local totalDamage
+    if damage ~= "out of range" then
+        totalDamage = damage + 2
+    else 
+        totalDamage = 0
+    end
     if weapon.specialAbilities.Burst  then
-        print("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
+        broadcastToAll("Can't Aim with burst weapon" .. "\n" .."--------------------------------------------------------------------------")
         return
     elseif weapon.specialAbilities.Projected then
-        print("Can't Aim with projected weapon".. "\n" .."--------------------------------------------------------------------------")
+        broadcastToAll("Can't Aim with projected weapon".. "\n" .."--------------------------------------------------------------------------")
         return
     end
+    totalDamage = obj2.AR - totalDamage
     totalMWTNRecoilLightObstruction = totalMWTNRecoil - 2 - (obj2.specialAbilities.Camouflage or 0)
     totalMWTNRecoilHeavyObstruction = totalMWTNRecoil - 4 - (obj2.specialAbilities.Camouflage or 0)
-    print( "Weapon: " .. (weapon.Name or "unknown").. "\n" ..
+    broadcastToAll( "Weapon: " .. (weapon.Name or "unknown").. "\n" ..
     " MW TN with Aim: " ..( totalMWTNRecoil or "unknown").. "\n" ..
     " MW TN with Aim and Light Obstruction: " ..( totalMWTNRecoilLightObstruction or "unknown").. "\n" ..
     " MW TN with and Light Obstruction: " ..( totalMWTNRecoilHeavyObstruction or "unknown").. "\n" ..
     " Critical Failure: ".. (weapon.critFail or "unknown") .. "\n" ..
-    " Damage: " .. (damage or "unknown") .. "\n" ..
+    " Damage: " .. (damage and damage + 2 or "Out of range") .. "\n" ..
     " Number of Shots: ".. burst .."\n" ..
     " Number of Saves per Shot: ".. (damageMultiplier or "unknown") .. "\n"..
-    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((obj2.AR - damage) or "unknown") .. "\n" ..
-    "Failure to AR Save TN ".. (((obj2.AR - damage + 1) or "unknown")).." - " ..((obj2.AR - damage + 5) or "unknown").. " Critical Failure: " .. ((obj2.AR - damage + 6 )or "unknown").. "\n" ..
+    "Success to AR Save TN by: " .. (obj2.Name or "unknown") .. " - " .. (obj2.Designation or "unknown") .. " ".. ((totalDamage) or "unknown") .. "\n" ..
+    "Failure to AR Save TN ".. (((totalDamage + 1) or "unknown")).." - " ..((totalDamage + 5) or "unknown").. " Critical Failure: " .. ((totalDamage + 6 )or "unknown").. "\n" ..
     "--------------------------------------------------------------------------")
 end
 
@@ -346,13 +358,13 @@ function calculate(params)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
     if #objects ~= 2 then
-        return print("Select 2 objects")
+        return broadcastToAll("Select 2 objects")
     end
     local customObject1 = objects[1].getVar("CustomData")
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
-    print("Distance: "..distance)
-    print("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+    broadcastToAll("Distance: "..distance)
+    broadcastToAll("Shoot action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
     for equipmentName, weapon in pairs(customObject1.Equipment) do
         if weapon.shortRange != nil or weapon.longRange !=nil then
 
@@ -377,13 +389,13 @@ function calculateMelee(params)
     local steamName = player.steam_name
     local objects = player.getSelectedObjects()
     if #objects ~= 2 then
-        return print("Select 2 objects")
+        return broadcastToAll("Select 2 objects")
     end
     local customObject1 = objects[1].getVar("CustomData")
     local customObject2 = objects[2].getVar("CustomData")
     local distance = calculateDistance(objects)
-    print("Distance: "..distance)
-      print("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
+    broadcastToAll("Distance: "..distance)
+    broadcastToAll("Strike action by: " .. customObject1.Name .. " ".. customObject1.Designation .. " | Targeting: ".. customObject2.Name .. " ".. customObject2.Designation)
      local meleeWeaponFound = false  -- Flag to track if a melee weapon is found
      for equipmentName, weapon in pairs(customObject1.Equipment) do
 

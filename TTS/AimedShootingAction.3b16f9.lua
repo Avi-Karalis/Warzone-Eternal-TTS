@@ -3,7 +3,7 @@
 function onClickCalculate(params)
     index = 3
     if index == 3 then
-        print("Aimed Shooting Action: ")
+        broadcastToAll("Aimed Shooting Action: ")
         params = {
             color = params.color,
             index = index
@@ -16,7 +16,7 @@ end
 
 function onScriptingButtonDown(index, color)
     if index == 3 then
-        print("Aimed Shooting Action: ")
+        broadcastToAll("Aimed Shooting Action: ")
         params = {
             color = color,
             index = index

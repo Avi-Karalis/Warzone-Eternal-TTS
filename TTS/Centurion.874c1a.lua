@@ -1,6 +1,6 @@
 weapon_data = getObjectFromGUID("467905")
 centurionLeader = {
-    Name = "Praetorian Stalker",
+    Name = "Centurion",
     MV = 5,
     MW = 13,
     CC = 15,
@@ -21,4 +21,4 @@ centurionLeader = {
     specialAbilities = {Command = "Necromutants, Undead Legionnaires", Controller = 9,  FierceCharge = 1, Inspire = 1},
     Designation = "Leader"
 }
-self.setVar("CustomData", centurion)
+self.setVar("CustomData", centurionLeader)

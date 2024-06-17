@@ -30,7 +30,7 @@ end
         specialAbilities = {},
         damageMultiplier = 1,
         shortRange = {range = 6, mWModifier = 0, Damage = 12},
-        longRange = {range = 18, mWModifier = -3, Damage = 11},
+        longRange = {range = 18, mWModifier = -3, Damage = 1},
         critFail = 20,
         dynamicCC = false
     }
@@ -384,11 +384,10 @@ end
     }
     delivererBattleblade={
         Name = "Deliverer Battleblade",
-        cCModifier =-1,
-        cCDamage = 9,
+        cCModifier =1,
+        cCDamage = 3,
         specialAbilities = {
-            Reach = 2,
-            Thrust = 2
+            MultiStrike = 2
         },
         damageMultiplier = 1,
         critFail = 20,
@@ -396,10 +395,11 @@ end
     }
     cyberClaws={
         Name = "Cyber Claws",
-        cCModifier = 1,
-        cCDamage = 3,
+        cCModifier = -1,
+        cCDamage = 9,
         specialAbilities = {
-            MultiStrike = 2,
+            Thrust = 2,
+            Reach = 2
         },
         damageMultiplier = 1,
         critFail = 20,

@@ -3,7 +3,7 @@
 function onClickCalculate(params)
     index = 5
     if index == 5 then
-        print("Charging Strike Action: ")
+        broadcastToAll("Charging Strike Action: ")
         params = {
             color = params.color,
             index = index
@@ -16,7 +16,7 @@ end
 
 function onScriptingButtonDown(index, color)
     if index == 5 then
-        print("Charging Strike Action: ")
+        broadcastToAll("Charging Strike Action: ")
         params = {
             color = color,
             index = index

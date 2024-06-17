@@ -1,6 +1,6 @@
 weapon_data = getObjectFromGUID("467905")
-hatamotoLeader = {
-    Name = "Hatamoto",
+captainHirokoLeader = {
+    Name = "Captain Hiroko",
     MV = 4,
     MW = 14,
     CC = 17,
@@ -11,13 +11,13 @@ hatamotoLeader = {
     PW = 11,
     LD = 15,
     Base = 30,
-    DP = 4,
+    DP = 6,
     SP = 3,
     Equipment = {
         airbrushShotgun = weapon_data.getTable("airbrushShotgun"),
         ceremonialBlades = weapon_data.getTable("ceremonialBlades")
     },
-    specialAbilities = {Executioner = 2 ,Duelist = -3, Fearless = 1, Honorbound = 1, Command = "Hatamoto", Inspire = 1},
+    specialAbilities = {Duelist = -3, Fearless = 1, Honorbound = 1, Command = "Hatamoto", Inspire = 1, Relentless = 1, Executioner = 2, FocusedFire=1},
     Designation = "Leader"
 }
-self.setVar("CustomData", hatamotoLeader)
+self.setVar("CustomData", captainHirokoLeader)
